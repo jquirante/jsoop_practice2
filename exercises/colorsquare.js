@@ -14,7 +14,15 @@ class ColorSquare{
 		you'll need to bind the handleClick method to this object:
 			this.handleClick = this.handleClick.bind(this)
 	*/
-	constructor( ){
+	constructor(colors, colorIndex, className){
+		
+		this.colors = colors;
+		this.colorIndex = colorIndex;
+		this.className = className;
+		this.currentSquare;
+		this.neighboringSquare = null;
+		this.handleClick = this.handleClick.bind(this);
+
 	}
 	/*setter function for the property neighbor
 	new, somewhat limited support: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set
@@ -26,8 +34,16 @@ class ColorSquare{
 		make sure it only sets the neighbor if it is the right class constructor (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor)
 		if it is the right constructor, set the neightbor
 	*/
-	set neighbor(){
+	set neighbor(newNeighbor){
+		
+		if (newNeighbor instanceof ColorSquare) {
+			this.neighboringSquare = newNeighbor;
+			return true;
+		} else {
+			return false;
+		}
 
+		
 	}
 	/* getter function for the property neighbor
 	new, somewhat limited support: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get
@@ -37,7 +53,7 @@ class ColorSquare{
 		this object's property of the neighbor to the right
 	*/
 	get neighbor(){
-
+		return this.neighboringSquare;
 	}
 	/*
 	click handler for this dom element
@@ -54,6 +70,38 @@ class ColorSquare{
 			make sure the rightNeighbor is something!  the rightmost element won't have a neighbor
 		*/
 	handleClick(){
+		// this.colorIndex++;
+
+		// if (this.colorIndex > this.colors.length-1) {
+		// 	this.colorIndex = 0;
+		// }
+
+		// this.changeColor(this.colors[this.colorIndex]);
+
+		// if (this.neighboringSquare !== null) {
+		// 	this.neighboringSquare.handleClick();
+		// }
+
+
+
+		if (this.colorIndex === this.colors.length-1) {
+			this.colorIndex = 0;
+			this.changeColor(this.colors[this.colorIndex]);
+
+			if (this.neighboringSquare !== null) {
+				this.neighboringSquare.handleClick();
+			}
+
+			
+		} else {
+			
+			this.colorIndex++;
+			this.changeColor(this.colors[this.colorIndex]);
+			if (this.neighboringSquare !== null) {
+				this.neighboringSquare.handleClick();
+			}
+			
+		}
 
 	}
 	/*
@@ -65,7 +113,8 @@ class ColorSquare{
 	notes:
 		changes the current object's dom element's backgound color to the argument color
 	*/
-	changeColor(  ){
+	changeColor( newColor ){
+		this.currentSquare.css('background-color', newColor);
 
 	}
 	/*
@@ -82,6 +131,16 @@ class ColorSquare{
 		return the dom element that was generated. 
 	*/
 	render(){
+		var square = $('<div>', {
+			class: this.className,
+			on: {
+				click: this.handleClick
+			},
+			'background-color': this.colors[this.colorIndex]
+		});
+
+		this.currentSquare = square;
+		return this.currentSquare;
 
 	}
 }

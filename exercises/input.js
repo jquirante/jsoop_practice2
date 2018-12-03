@@ -4,33 +4,49 @@ class Input{
 	//constructor takes in a a target input element
 	//should also construct variables for the range, the pattern, and the element that will hold the error message
 	//range min and max should default to null
-	constructor( ){
-
+	constructor( inputElement ){
+		this.targetInput = inputElement;
+		this.rangeMin = null;
+		this.rangeMax = null;
+		this.pattern;
+		this.error;
+		this.errorContainer;
 	}
 	//setRange sets the minimum and maximum range, if necessary, for the input
 	//arguments : min (a number), and max (a number)
 	//returns: nothing
 	//purpose: sets the min and max values for the object
-	setRange(  ){
+	setRange( min, max ){
+		this.rangeMin = min;
+		this.rangeMax = max;
+
 
 	}
 	//getRange gets the minimum and maximum range.
 	//arguments: nothing
 	//returns: an object with a property of min, and a property of max, containing the minimum and maximum numbers
 	getRange(){
+		var range = {
+			min: this.rangeMin,
+			max: this.rangeMax
+		}
+
+		return range;
 		
 	}
 	//setPattern saves a regex pattern into the object
 	//arguments: pattern (a regular expression.  if you don't know what it is, you will learn it soon)
 	//returns: nothing
 	//saves the given pattern into the object
-	setPattern(  ){
+	setPattern( regexPattern ){
+		this.pattern = regexPattern;
 		
 	}
 	//getPattern returns the currently stored pattern of the input object
 	//arguments: nothing
 	//returns: the currently stored regex pattern
 	getPattern(){
+		return this.pattern;
 		
 	}
 	//test runs all current tests on the target input and returns an object with data about whether the input passed or not
@@ -50,6 +66,30 @@ class Input{
 		if it is still null, no range has been set, so don't test it
 			if it is not null, then test the range */
 	test(){
+		var inputText = this.targetInput.val();
+		var testResult = {
+			result: null,
+			error: null,
+		}
+		if (this.rangeMin === null && this.rangeMax === null) {
+			if(this.pattern.test(inputText)) {
+				testResult.result = true;
+			} else {
+				testResult.result = false;
+				testResult.error = 'pattern';
+			}
+		} 
+		
+		if (this.rangeMin !== null && this.rangeMax !== null) {
+			if(inputText >= this.rangeMin && inputText <= this.rangeMax) {
+				testResult.result = true;
+			} else {
+				testResult.result = false;
+				testResult.error = 'range'
+			}
+		}
+
+		return testResult;
 
 	}
 	/*
@@ -69,7 +109,25 @@ class Input{
 		MAKE SURE TO STORE the reference to the dom element in the object for later use!
 		Don't store the CSS selector, you made the element, store the direct dom object itself!
 		*/
-	showError(  ){
+	showError( message ){
+		var position = this.targetInput.position();
+		var positionHeight = this.targetInput
+		var parentElement = this.targetInput.parent();
+		// console.log('top', position.top);
+		// console.log('left', position.left);
+		// console.log('height', positionHeight.height());
+		var errorElement = $('<div>', {
+			class: 'inputError',
+			position: 'relative',
+			text: message,
+			css: {
+				left: position.left + 'px',
+				top: position.top + position.height + 'px',
+			}
+		});
+
+		parentElement.append(errorElement);
+		this.errorContainer = errorElement;
 
 	}
 	/*
@@ -80,6 +138,7 @@ class Input{
 		removes the dom element in question (https://www.w3schools.com/jquery/html_remove.asp)
 		*/
 	hideError(){
+		this.errorContainer.remove();
 		
 	}
 }
