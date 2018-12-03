@@ -70,19 +70,6 @@ class ColorSquare{
 			make sure the rightNeighbor is something!  the rightmost element won't have a neighbor
 		*/
 	handleClick(){
-		// this.colorIndex++;
-
-		// if (this.colorIndex > this.colors.length-1) {
-		// 	this.colorIndex = 0;
-		// }
-
-		// this.changeColor(this.colors[this.colorIndex]);
-
-		// if (this.neighboringSquare !== null) {
-		// 	this.neighboringSquare.handleClick();
-		// }
-
-
 
 		if (this.colorIndex === this.colors.length-1) {
 			this.colorIndex = 0;
